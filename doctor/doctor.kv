@@ -1,0 +1,587 @@
+#: import main kivygui
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+#: import ListItemButton kivy.uix.listview.ListItemButton
+
+<CustButton@Button>
+    background_normal: 'normal.png'
+    background_down: 'blue.png'
+    border: 15, 15, 15, 15
+    size_hint_y: None
+    height: 50
+
+<TitleLabel@Label>
+    color: 0.2, 0.2, 0.2, 1
+    font_size: 36
+
+<BlackLabel@Label>
+    text_size: self.size
+    halign: "left"
+    valign: "middle"
+    color: 0, 0, 0, 1
+    font_size: 24
+
+<NewPatientLabel@Label>
+    pos_hint: {"left": 1, "center_y": .5}
+    text_size: self.size
+    halign: "left"
+    valign: "middle"
+    color: 0, 0, 0, 1
+    font_size: 20
+
+<CheckBoxLabel@Label>
+    pos_hint: {"left": 1, "center_y": .5}
+    text_size: self.size
+    halign: "left"
+    valign: "middle"
+    color: 0, 0, 0, 1
+    font_size: 14
+
+<WarnLabel@Label>
+    color: 1, 0, 0, 1
+    font_size: 12
+
+<NewPatientBox@BoxLayout>
+    spacing: 30
+    orientation: "horizontal"
+    size_hint_y: None
+    height: 40
+
+<CustTextInput@TextInput>
+    pos_hint: {"left": 1, "center_y": .5}
+    size_hint_y: None
+    height: 40
+    font_size: 20
+    multiline: False
+    padding_y: (self.height - self.line_height) / 2
+
+
+<ListItemButton>:
+    selected_color: .015625, .5625, .765625, 1
+    deselected_color: .6953125, .6953125, .6953125, 1
+
+<ScreenLogin>:
+    id: screenlogin
+    login_fail_text: login_fail
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 10
+        padding: 40
+
+        TitleLabel:
+            text: "Doctor Login"
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 40
+            padding: 40
+            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: None, None
+            width: 500
+            height: 300
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: 20
+
+                BlackLabel:
+                    text: "Username"
+                    size_hint_x: .25
+
+                CustTextInput:
+                    id: input_username
+                    font_size: 24
+                    multiline: False
+                    size_hint_x: .6
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: 20
+
+                BlackLabel:
+                    text: "Password"
+                    size_hint_x: .25
+
+                CustTextInput:
+                    id: input_password
+                    font_size: 24
+                    multiline: False
+                    password: True
+                    size_hint_x: .6
+
+            CustButton:
+                pos_hint: {"center_x": .5, "center_y": .5}
+                size_hint_x: .6
+                text: "Login"
+                on_press:
+                    root.login(input_username.text, input_password.text)
+                    input_username.text = ""
+                    input_password.text = ""
+
+        WarnLabel:
+            id: login_fail
+            text: ""
+                
+<ScreenList>:
+    patient_list: patients_list_view
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 30
+        padding: 60
+
+        GridLayout:
+            cols: 2
+            height: 50
+            size_hint_y: None
+            spacing: 10
+
+            BlackLabel:
+                text_size: self.size
+                text: "Welcome, admin."
+
+            CustButton:
+                text: "Logout"
+                size_hint_x: None
+                width: 70
+                on_press:
+                    root.open_logout_popup()
+
+        TabbedPanel:
+            do_default_tab: False
+
+            TabbedPanelItem:
+                text: "Patient List"
+                
+                ScrollView:
+                    do_scroll_x: False
+
+                    ListView:
+                        id: patients_list_view
+                        adapter:
+                            ListAdapter(data=[], cls=main.PatientListButton)
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            spacing: 10
+
+            CustButton:
+                text: "Add New Patient"
+                on_press:
+                    root.manager.transition.direction = "right"
+                    root.manager.transition.duration = 1
+                    root.manager.current = "screen_add_patient"
+
+
+            CustButton:
+                text: "Edit Selected Patient"
+                on_press:
+                    root.edit()
+
+<ScreenAddPatient>:
+    add_fail_text: add_fail
+
+    first_name_text_input: first_name
+    last_name_text_input: last_name
+    dob_text_input: date_of_birth
+    weight_text_input: weight
+    height_text_input: height
+    number_text_input: phone_number
+
+    male_checkbox: male
+    female_checkbox: female
+    other_gender_checkbox: other_gender
+    a_type_checkbox: a_type
+    b_type_checkbox: b_type
+    o_type_checkbox: o_type
+    ab_type_checkbox: ab_type
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 20
+        padding: 20
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: .1
+            spacing: 20
+
+            CustButton:
+                size_hint_x: .4
+                size_hint_y: None
+                pos_hint: {"center_x": .5, "top": 1}
+                text: "Save"
+                on_press:
+                    root.save()
+                    #root.manager.transition.direction = "left"
+                    #root.manager.transition.duration = 1
+                    #root.manager.current = "screen_list"
+
+            CustButton:
+                size_hint_x: .4
+                size_hint_y: None
+                pos_hint: {"center_x": .5, "top": 1}
+                text: "Cancel"
+                on_press:
+                    root.clean()
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 20
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: .6
+                padding_x: 10
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "First Name"
+                    NewPatientLabel:
+                        text: "Last Name"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: first_name
+                        font_size: 20
+                        multiline: False
+                    CustTextInput:
+                        id: last_name
+                        font_size: 20
+                        multiline: False
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Date of Birth"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: date_of_birth
+                        font_size:20
+                        multiline: False
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Gender"
+
+                NewPatientBox:
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: male
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Male"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: female
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Female"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: other_gender
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Other"
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Height"
+                    NewPatientLabel:
+                        text: "Weight"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: height
+                    CustTextInput:
+                        id: weight
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Phone Number"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: phone_number
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Blood Type"
+
+                NewPatientBox:
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: a_type
+                            group: "blood"
+                            #on_active: root.setBloodType("A")
+                        CheckBoxLabel:
+                            text: "A"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: b_type
+                            group: "blood"
+                            #on_active: root.setBloodType("B")
+                        CheckBoxLabel:
+                            text: "B"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: o_type
+                            group: "blood"
+                            #on_active: root.setBloodType("O")
+                        CheckBoxLabel:
+                            text: "O"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: ab_type
+                            group: "blood"
+                            #on_active: root.setBloodType("AB")
+                        CheckBoxLabel:
+                            text: "AB"
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: .4
+                padding_x: 10
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    WarnLabel:
+                        id: add_fail
+                        size_hint_y: None
+                        #height: 12
+                        pos: self.parent.x, self.parent.height
+                        text: ""
+
+                BoxLayout:
+                    orientation: "horizontal"
+
+                BoxLayout:
+                    orientation: "horizontal"
+
+                CustButton:
+                    size_hint: None, None
+                    width: self.parent.width
+                    height: self.parent.width
+                    pos_hint: {"center_x": .5, "top": 1}
+                    text: "Take Photo"
+                    on_press: root.takePhoto()
+
+<ScreenEditPatient>:
+    edit_fail_text: edit_fail
+
+    first_name_text_input: first_name
+    last_name_text_input: last_name
+    dob_text_input: date_of_birth
+    weight_text_input: weight
+    height_text_input: height
+    number_text_input: phone_number
+
+    male_checkbox: male
+    female_checkbox: female
+    other_gender_checkbox: other_gender
+    a_type_checkbox: a_type
+    b_type_checkbox: b_type
+    o_type_checkbox: o_type
+    ab_type_checkbox: ab_type
+
+    med_1_text_input: med_1
+    med_2_text_input: med_2
+    med_3_text_input: med_3
+    has_med_switch: has_med
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 20
+        padding: 20
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: .1
+            spacing: 20
+
+            CustButton:
+                size_hint_x: .4
+                size_hint_y: None
+                pos_hint: {"center_x": .5, "top": 1}
+                text: "Save"
+                on_press:
+                    root.save()
+
+            CustButton:
+                size_hint_x: .4
+                size_hint_y: None
+                pos_hint: {"center_x": .5, "top": 1}
+                text: "Cancel"
+                on_press:
+                    root.clean()
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 40
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: .6
+                padding_x: 10
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "First Name"
+                    NewPatientLabel:
+                        text: "Last Name"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: first_name
+                        font_size: 20
+                        multiline: False
+                    CustTextInput:
+                        id: last_name
+                        font_size: 20
+                        multiline: False
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Date of Birth"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: date_of_birth
+                        font_size:20
+                        multiline: False
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Gender"
+
+                NewPatientBox:
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: male
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Male"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: female
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Female"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: other_gender
+                            group: "gender"
+                        CheckBoxLabel:
+                            text: "Other"
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Height"
+                    NewPatientLabel:
+                        text: "Weight"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: height
+                    CustTextInput:
+                        id: weight
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Phone Number"
+
+                NewPatientBox:
+                    CustTextInput:
+                        id: phone_number
+
+                NewPatientBox:
+                    NewPatientLabel:
+                        text: "Blood Type"
+
+                NewPatientBox:
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: a_type
+                            group: "blood"
+                        CheckBoxLabel:
+                            text: "A"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: b_type
+                            group: "blood"
+                        CheckBoxLabel:
+                            text: "B"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: o_type
+                            group: "blood"
+                        CheckBoxLabel:
+                            text: "O"
+                    BoxLayout:
+                        orientation: "horizontal"
+                        CheckBox:
+                            id: ab_type
+                            group: "blood"
+                        CheckBoxLabel:
+                            text: "AB"
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: .4
+                padding_x: 10
+                spacing: 10
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    WarnLabel:
+                        id: edit_fail
+                        size_hint_y: None
+                        #height: 12
+                        pos: self.parent.x, self.parent.height
+                        text: ""
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: 10
+                    CheckBoxLabel:
+                        text: "# of Medicine 1"
+                    CustTextInput:
+                        id: med_1
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: 10
+                    CheckBoxLabel:
+                        text: "# of Medicine 2"
+                    CustTextInput:
+                        id: med_2
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: 10
+                    CheckBoxLabel:
+                        text: "# of Medicine 3"
+                    CustTextInput:
+                        id: med_3
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    Switch:
+                        id: has_med
+                    CheckBoxLabel:
+                        text: "Prescribe"
+
+                
+

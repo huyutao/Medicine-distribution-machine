@@ -1,0 +1,102 @@
+<CustButton@Button>
+    background_normal: 'blue.png'
+    background_down: 'normal.png'
+    border: 15, 15, 15, 15
+    size_hint_y: None
+    height: 50
+
+<TitleLabel@Label>
+    color: 0.2, 0.2, 0.2, 1
+    font_size: 36
+
+<BlackLabel@Label>
+    text_size: self.size
+    halign: "left"
+    valign: "middle"
+    color: 0, 0, 0, 1
+    font_size: 24
+
+<WarnLabel@Label>
+    color: 1, 0, 0, 1
+    font_size: 12
+
+
+<ScreenPickUp>:
+    BoxLayout:
+        padding: 30
+        orientation: "vertical"
+        TitleLabel:
+            text: "Welcome to \nMedicine Distribution Machine!"
+
+        CustButton:
+            size_hint: 0.5,0.5
+            pos_hint: {"center_x": .5,"y": .5}
+            text: "Pick Up!\nYour Medicine"
+            on_press:
+                root.start_pick_up()
+
+<ScreenReadyTakePhoto>:
+    BoxLayout:
+        padding: 30
+        orientation: "vertical"
+        TitleLabel:
+            text: "Press Blue Button to Start"
+
+        CustButton:
+            size_hint: 0.5,0.5
+            pos_hint: {"center_x": .5,"y": .5}
+            text: "Put your face \nin front of \nthe camera"
+            font_size: 25
+            on_press:
+                root.start_veri()
+
+
+<ScreenTakePhoto>:
+    BoxLayout:
+        padding: 10
+        orientation: "vertical"
+        TitleLabel:
+            text: "Gathering Information!"
+
+        TitleLabel:
+            text: "Please Wait."
+
+
+<ScreenPass>:
+    on_enter: root.deliver()
+    BoxLayout:
+        padding: 10
+        orientation: "vertical"
+        size_hint_y: .9
+        TitleLabel:
+            text: "Passed"
+
+        TitleLabel:
+            text: "Your Medicine is on the way."
+
+        CustButton:
+            text: "Done!"
+            on_press: root.restart()
+
+
+
+<ScreenNoPass>:
+    BoxLayout:
+        padding: 10
+        orientation: "vertical"
+        TitleLabel:
+            text: "Not Passed"
+
+        TitleLabel:
+            text: "Sorry, cannot find your medicine \nin the database."
+
+        CustButton:
+            text: "Ask assitant for help"
+            on_press: root.restart()
+
+
+
+
+
+
+
